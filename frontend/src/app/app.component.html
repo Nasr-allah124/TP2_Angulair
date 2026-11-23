@@ -1,0 +1,62 @@
+<main>
+  <h1>Gestion des tâches</h1>
+
+  <form class="add-form" (ngSubmit)="add()">
+    <label for="new-title">Titre de la tâche</label>
+    <input id="new-title" name="newTitle" [(ngModel)]="newTitle"
+      required [disabled]="busy() || !loaded()">
+    <label for="new-description">Description facultative</label>
+    <textarea id="new-description" name="newDescription" rows="2" [(ngModel)]="newDescription"
+      [disabled]="busy() || !loaded()"></textarea>
+    <button type="submit" [disabled]="busy() || !loaded() || !newTitle.trim()">Ajouter une tâche</button>
+  </form>
+
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+
+  @if (!loaded()) {
+    @if (busy()) {
+      <p role="status">Chargement des tâches…</p>
+    } @else {
+      <button type="button" class="secondary" (click)="load()">Réessayer</button>
+    }
+  } @else {
+    <ul aria-label="Liste des tâches">
+      @for (task of tasks(); track task._id) {
+        <li>
+          @if (editId === task._id) {
+            <form class="edit-form" (ngSubmit)="saveEdit(task)">
+              <label for="edit-title">Titre de la tâche</label>
+              <input id="edit-title" name="editTitle" [(ngModel)]="editTitle" required [disabled]="busy()">
+              <label for="edit-description">Description facultative</label>
+              <textarea id="edit-description" name="editDescription" rows="2"
+                [(ngModel)]="editDescription" [disabled]="busy()"></textarea>
+              <div class="actions">
+                <button type="submit" [disabled]="busy() || !editTitle.trim()">Enregistrer</button>
+                <button type="button" class="secondary" (click)="editId = null" [disabled]="busy()">Annuler</button>
+              </div>
+            </form>
+          } @else {
+            <div class="task">
+              <strong [class.completed]="task.completed">{{ task.title }}</strong>
+              <small [class.done]="task.completed">{{ task.completed ? 'Terminée' : 'À faire' }}</small>
+              @if (task.description) {
+                <p>{{ task.description }}</p>
+              }
+            </div>
+            <div class="actions">
+              <button type="button" class="success" (click)="toggle(task)" [disabled]="busy()">
+                {{ task.completed ? 'Reprendre' : 'Terminer' }}
+              </button>
+              <button type="button" class="secondary" (click)="startEdit(task)" [disabled]="busy()">Modifier</button>
+              <button type="button" class="danger" (click)="remove(task)" [disabled]="busy()">Supprimer</button>
+            </div>
+          }
+        </li>
+      } @empty {
+        <li class="empty">Aucune tâche pour le moment.</li>
+      }
+    </ul>
+  }
+</main>

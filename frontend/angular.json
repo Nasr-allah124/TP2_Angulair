@@ -1,0 +1,39 @@
+{
+    "version":  1,
+    "cli":  {
+                "analytics":  false
+            },
+    "projects":  {
+                     "tp2-todo":  {
+                                      "projectType":  "application",
+                                      "root":  "",
+                                      "sourceRoot":  "src",
+                                      "architect":  {
+                                                        "build":  {
+                                                                      "builder":  "@angular/build:application",
+                                                                      "options":  {
+                                                                                      "browser":  "src/main.ts",
+                                                                                      "index":  "src/index.html",
+                                                                                      "tsConfig":  "tsconfig.json",
+                                                                                      "styles":  [
+                                                                                                     "src/styles.css"
+                                                                                                 ]
+                                                                                  },
+                                                                      "configurations":  {
+                                                                                             "development":  {
+                                                                                                                 "sourceMap":  true,
+                                                                                                                 "optimization":  false
+                                                                                                             }
+                                                                                         }
+                                                                  },
+                                                        "serve":  {
+                                                                      "builder":  "@angular/build:dev-server",
+                                                                      "options":  {
+                                                                                      "buildTarget":  "tp2-todo:build:development",
+                                                                                      "proxyConfig":  "proxy.conf.json"
+                                                                                  }
+                                                                  }
+                                                    }
+                                  }
+                 }
+}
